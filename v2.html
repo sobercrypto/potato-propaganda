@@ -41,7 +41,7 @@
     }
 
     #startModal button {
-      background: #00ffcc; /* Lighter green */
+      background: #00ffcc;
       border: none;
       padding: 10px 20px;
       font-family: 'Press Start 2P', monospace;
@@ -53,7 +53,7 @@
     }
 
     #startModal button:hover {
-      background: #00cc99; /* Slightly darker green hover effect */
+      background: #00cc99;
     }
 
     .centered-text {
@@ -68,7 +68,7 @@
       pointer-events: auto;
       font-family: 'Press Start 2P', monospace;
       max-width: 90%;
-      white-space: nowrap; /* Prevent wrapping on larger screens */
+      white-space: nowrap;
     }
 
     a {
@@ -86,9 +86,9 @@
       margin: 10px;
       font-size: 16px;
       font-family: 'Press Start 2P', monospace;
-      background: rgba(0, 0, 0, 0.5); /* Transparent black fill */
+      background: rgba(0, 0, 0, 0.5);
       color: #fff;
-      border: 2px solid #8000ff; /* Purple outline */
+      border: 2px solid #8000ff;
       border-radius: 12px;
       cursor: pointer;
       text-align: center;
@@ -104,7 +104,7 @@
       position: fixed;
       bottom: 20px;
       right: 20px;
-      background: rgba(0, 0, 0, 0.5); /* Transparent black fill */
+      background: rgba(0, 0, 0, 0.5);
       color: #fff;
       border: none;
       border-radius: 12px;
@@ -160,7 +160,7 @@
 
   <canvas id="blizzardCanvas"></canvas>
   <div class="centered-text" id="textContainer">
-    <p>POTATO PROPAGANDA IS A TRUTH TERMINAL PROPHECY</p>
+    <p>POTATO PROPAGANDA IS A TRUTH TERMINAL MEME</p>
     <p>
       <a href="https://dexscreener.com/solana/2nkjfack2cq6hrnaw9fec6jmzrzk5lmvq9pis2vy9ppk">DexScreener</a>   
       <a href="https://raydium.io/swap/?inputMint=sol&outputMint=6ksVq6fcgaiAXCWYiE9zRS1NLTxeKMPcVSAzzByTpump">Raydium</a>
@@ -194,6 +194,12 @@
     const cursor = { x: -100, y: -100 };
     let tiltX = 0, tiltY = 0;
 
+    // DeviceOrientation event listener for tilt gravity
+    window.addEventListener("deviceorientation", (event) => {
+      tiltX = event.gamma || 0; // Left-to-right tilt
+      tiltY = event.beta || 0;  // Front-to-back tilt
+    });
+
     class Particle {
       constructor() {
         this.reset();
@@ -220,9 +226,9 @@
           this.vy += force * dy / distance;
         }
 
-        // Apply tilt/gravity effect
-        this.vx += tiltX * 0.1;
-        this.vy += tiltY * 0.1;
+        // Amplified tilt/gravity effect
+        this.vx += tiltX * 0.3; // Increase multiplier for stronger effect
+        this.vy += tiltY * 0.3;
 
         this.x += this.vx;
         this.y += this.vy;
@@ -258,12 +264,6 @@
 
       requestAnimationFrame(animate);
     }
-
-    // DeviceOrientation event listener for tilt gravity
-    window.addEventListener("deviceorientation", (event) => {
-      tiltX = event.gamma || 0; // Left-to-right tilt
-      tiltY = event.beta || 0;  // Front-to-back tilt
-    });
 
     startButton.addEventListener("click", () => {
       startModal.style.display = "none";
