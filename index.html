@@ -41,19 +41,19 @@
     }
 
     #startModal button {
-      background: rgba(0, 0, 0, 0.5); /* Transparent black fill */
+      background: #00ffcc; /* Lighter green */
       border: none;
       padding: 10px 20px;
       font-family: 'Press Start 2P', monospace;
       font-size: 16px;
       cursor: pointer;
-      color: #fff;
+      color: #000;
       margin-top: 20px;
       border-radius: 8px;
     }
 
     #startModal button:hover {
-      background: rgba(0, 0, 0, 0.7);
+      background: #00cc99; /* Slightly darker green hover effect */
     }
 
     .centered-text {
@@ -88,7 +88,7 @@
       font-family: 'Press Start 2P', monospace;
       background: rgba(0, 0, 0, 0.5); /* Transparent black fill */
       color: #fff;
-      border: 2px solid #00cc99;
+      border: 2px solid #8000ff; /* Purple outline */
       border-radius: 12px;
       cursor: pointer;
       text-align: center;
@@ -276,7 +276,7 @@
     const removeParticlesButton = document.getElementById("removeParticles");
 
     addParticlesButton.addEventListener("click", () => {
-      particleCount = Math.min(particleCount * 1.2, 10000);
+      particleCount = Math.min(particleCount * 1.2, 200000);
       createParticles();
     });
 
