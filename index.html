@@ -3,65 +3,70 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Technicolor Flutter Blizzard</title>
+  <title>Potato Propaganda</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
     body {
       margin: 0;
       overflow: hidden;
-      background: radial-gradient(circle at center, #001f3f, #001a33); /* Dark blue gradient */
+      background: radial-gradient(circle at center, #00000F, #000005); /* Very dark blue gradient */
+      font-family: 'Press Start 2P', monospace; /* System-like computer font */
       color: #fff;
-      font-family: Arial, sans-serif;
+      cursor: none; /* Hide default cursor */
     }
 
     canvas {
       display: block;
     }
 
-    .controls {
-      position: fixed;
-      top: 10px;
-      left: 10px;
-      background: rgba(0, 0, 0, 0.8);
-      padding: 10px;
-      border-radius: 10px;
-      z-index: 10;
-    }
-
-    .controls label {
-      display: block;
-      margin: 5px 0;
-    }
-
-    .controls input {
-      width: 100%;
+    .centered-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      color: #fff;
+      font-size: 18px; /* Slightly smaller for a more system-like look */
+      z-index: 5;
+      pointer-events: none;
+      font-family: 'Press Start 2P', monospace; /* System font */
+      max-width: 90%; /* Prevents wrapping */
+      white-space: nowrap; /* No line breaks */
     }
   </style>
 </head>
 <body>
-  <div class="controls">
-    <label>
-      Flutter Speed (ms between resets):
-      <input id="flutterSpeed" type="range" min="5" max="100" value="10">
-    </label>
-  </div>
   <canvas id="quantumCanvas"></canvas>
+  <div class="centered-text" id="textContainer">
+    <p>POTATO PROPAGANDA IS A TRUTH TERMINAL PROPHECY</p>
+    <p><a href="https://dexscreener.com/solana/2nkjfack2cq6hrnaw9fec6jmzrzk5lmvq9pis2vy9ppk">DexScreener</a>   
+      <a href="https://raydium.io/swap/?inputMint=sol&outputMint=6ksVq6fcgaiAXCWYiE9zRS1NLTxeKMPcVSAzzByTpump">Raydium</a>
+      <a href="https://t.me/potaprop">Telegram</a>   
+      <a href="https://discord.gg/BWPVp5DT">Discord</a> </p>
+  </div>
+  <!-- Add audio element for background music -->
+  <audio id="backgroundMusic" autoplay loop>
+    <source src="https://audio.jukehost.co.uk/JueWH0eTduAlwlnNpISBAfG3OR5Dxca2" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
 
   <script>
     const canvas = document.getElementById("quantumCanvas");
     const ctx = canvas.getContext("2d");
+    const textContainer = document.getElementById("textContainer");
 
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    let particles = [];
     const colors = [
       "rgba(50, 150, 255, 0.8)", // Electric blue
-      "rgba(0, 100, 255, 0.8)",  // Deep blue
-      "rgba(0, 50, 255, 0.8)",   // Darker neon blue
-      "rgba(30, 30, 255, 0.8)",  // Midnight blue
+      "rgba(200, 50, 150, 0.8)", // Dark pink
+      "rgba(100, 50, 200, 0.8)", // Purple
     ];
-    const flutterSpeedSlider = document.getElementById("flutterSpeed");
-    let flutterInterval;
+    const particleCount = 600; // Total number of particles
+    const particles = [];
+    const cursor = { x: -100, y: -100 }; // Cursor starts off-screen
 
     class Particle {
       constructor() {
@@ -71,8 +76,6 @@
       reset() {
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * canvas.height;
-        this.vx = (Math.random() - 0.5) * 10; // Rapid speed
-        this.vy = (Math.random() - 0.5) * 10;
         this.size = Math.random() * 3 + 1;
         this.color = colors[Math.floor(Math.random() * colors.length)];
         this.alpha = Math.random() * 0.8 + 0.2;
@@ -87,68 +90,63 @@
         ctx.fill();
         ctx.closePath();
       }
-
-      update() {
-        this.x += this.vx;
-        this.y += this.vy;
-
-        // If the particle goes off-screen, reset it
-        if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {
-          this.reset();
-        }
-      }
     }
 
-    function createParticles(count) {
-      particles = [];
-      for (let i = 0; i < count; i++) {
+    function createParticles() {
+      particles.length = 0; // Clear existing particles
+      for (let i = 0; i < particleCount; i++) {
         particles.push(new Particle());
       }
     }
 
     function animate() {
-      ctx.fillStyle = "rgba(0, 0, 20, 0.3)"; // Darker blue background
+      ctx.fillStyle = "rgba(0, 0, 15, 1)"; // Steady dark blue background
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       particles.forEach((particle) => {
-        particle.update();
+        // Particle attraction toward cursor
+        const dx = cursor.x - particle.x;
+        const dy = cursor.y - particle.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+
+        if (distance < 100) {
+          const force = (100 - distance) / 100;
+          particle.x += force * dx / distance;
+          particle.y += force * dy / distance;
+        }
+
         particle.draw();
+        particle.reset(); // Reset particles every frame for flutter effect
       });
+
+      // Draw potato cursor
+      ctx.beginPath();
+      ctx.arc(cursor.x, cursor.y, 20, 0, Math.PI * 2);
+      ctx.fillStyle = "yellow";
+      ctx.shadowBlur = 30;
+      ctx.shadowColor = "yellow";
+      ctx.fill();
+      ctx.closePath();
+
+      requestAnimationFrame(animate);
     }
 
-    function startFlutterEffect() {
-      clearInterval(flutterInterval);
-
-      const flutterSpeed = parseInt(flutterSpeedSlider.value);
-
-      // Flutter effect: reset particles rapidly
-      flutterInterval = setInterval(() => {
-        createParticles(600); // Rapidly repopulate particles
-      }, flutterSpeed);
-
-      // Continuous animation
-      function continuousAnimate() {
-        animate();
-        requestAnimationFrame(continuousAnimate);
-      }
-      continuousAnimate();
-    }
-
-    // Ensure flutter effect continues after window resize
+    // Handle window resize
     window.addEventListener("resize", () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
-      createParticles(600); // Reset particles for the new canvas size
+      createParticles();
     });
 
-    // Event listeners for persistent flutter
-    flutterSpeedSlider.addEventListener("input", () => {
-      startFlutterEffect();
+    // Track cursor movement
+    window.addEventListener("mousemove", (e) => {
+      cursor.x = e.clientX;
+      cursor.y = e.clientY;
     });
 
-    // Initialize particles and flutter effect
-    createParticles(600);
-    startFlutterEffect();
+    // Initialize particles and animation
+    createParticles();
+    animate();
   </script>
 </body>
 </html>
