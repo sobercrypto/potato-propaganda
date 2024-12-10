@@ -10,14 +10,49 @@
     body {
       margin: 0;
       overflow: hidden;
-      background: radial-gradient(circle at center, #00000F, #000005); /* Very dark blue gradient */
-      font-family: 'Press Start 2P', monospace; /* System-like computer font */
+      background: radial-gradient(circle at center, #00000F, #000005);
+      font-family: 'Press Start 2P', monospace;
       color: #fff;
-      cursor: none; /* Hide default cursor */
     }
 
     canvas {
       display: block;
+    }
+
+    #startModal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-family: 'Press Start 2P', monospace;
+      z-index: 100;
+    }
+
+    #startModal p {
+      font-size: 24px;
+      text-align: center;
+      animation: glitch 2s infinite;
+    }
+
+    #startModal button {
+      background: #00ffcc;
+      border: none;
+      padding: 10px 20px;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 16px;
+      cursor: pointer;
+      color: #000;
+      margin-top: 20px;
+    }
+
+    #startModal button:hover {
+      background: #00cc99;
     }
 
     .centered-text {
@@ -27,46 +62,131 @@
       transform: translate(-50%, -50%);
       text-align: center;
       color: #fff;
-      font-size: 18px; /* Slightly smaller for a more system-like look */
+      font-size: 18px;
       z-index: 5;
-      pointer-events: none;
-      font-family: 'Press Start 2P', monospace; /* System font */
-      max-width: 90%; /* Prevents wrapping */
-      white-space: nowrap; /* No line breaks */
+      pointer-events: auto;
+      font-family: 'Press Start 2P', monospace;
+      max-width: 90%;
+      white-space: nowrap;
+    }
+
+    a {
+      color: #00ffcc;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .adjust-button {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 50px;
+      height: 50px;
+      font-size: 24px;
+      font-family: 'Press Start 2P', monospace;
+      background: rgba(0, 0, 0, 0.5);
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      text-align: center;
+      line-height: 50px;
+      z-index: 10;
+    }
+
+    .adjust-button:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .adjust-button.left {
+      left: 10%;
+    }
+
+    .adjust-button.right {
+      right: 10%;
+    }
+
+    .pause-button {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: rgba(0, 0, 0, 0.5);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 10px;
+      font-family: 'Press Start 2P', monospace;
+      cursor: pointer;
+      z-index: 10;
+    }
+
+    .pause-button:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    @keyframes glitch {
+      0% {
+        text-shadow: 2px 2px #ff00ff, -2px -2px #00ffff;
+      }
+      25% {
+        text-shadow: -2px 2px #ff00ff, 2px -2px #00ffff;
+      }
+      50% {
+        text-shadow: 2px -2px #ff00ff, -2px 2px #00ffff;
+      }
+      75% {
+        text-shadow: -2px -2px #ff00ff, 2px 2px #00ffff;
+      }
+      100% {
+        text-shadow: 2px 2px #ff00ff, -2px -2px #00ffff;
+      }
     }
   </style>
 </head>
 <body>
-  <canvas id="quantumCanvas"></canvas>
+  <div id="startModal">
+    <div>
+      <p>ACTIVATE THE POTATO PROPAGANDA PROPHECY</p>
+      <button id="startButton">Start</button>
+    </div>
+  </div>
+
+  <canvas id="blizzardCanvas"></canvas>
   <div class="centered-text" id="textContainer">
-    <p>POTATO PROPAGANDA IS A TRUTH TERMINAL PROPHECY</p>
-    <p><a href="https://dexscreener.com/solana/2nkjfack2cq6hrnaw9fec6jmzrzk5lmvq9pis2vy9ppk">DexScreener</a>   
+    <p>POTATO PROPAGANDA TRANSCEND DIMENSIONS</p>
+    <p>POTATO PROPAGANDA IS THE BIRTH OF A MEME LEGEND</p>
+    <p>
+      <a href="https://dexscreener.com/solana/2nkjfack2cq6hrnaw9fec6jmzrzk5lmvq9pis2vy9ppk">DexScreener</a>   
       <a href="https://raydium.io/swap/?inputMint=sol&outputMint=6ksVq6fcgaiAXCWYiE9zRS1NLTxeKMPcVSAzzByTpump">Raydium</a>
       <a href="https://t.me/potaprop">Telegram</a>   
-      <a href="https://discord.gg/BWPVp5DT">Discord</a> </p>
+      <a href="https://discord.gg/BWPVp5DT">Discord</a> 
+    </p>
   </div>
-  <!-- Add audio element for background music -->
-  <audio id="backgroundMusic" autoplay loop>
-    <source src="https://audio.jukehost.co.uk/JueWH0eTduAlwlnNpISBAfG3OR5Dxca2" type="audio/mpeg">
+  <button class="adjust-button left" id="removeParticles">-</button>
+  <button class="adjust-button right" id="addParticles">+</button>
+  <button class="pause-button" id="pauseButton">Pause</button>
+  <audio id="backgroundMusic" loop>
+    <source src="https://steamnshine.squarespace.com/s/Potatoes.mp3" type="audio/mpeg">
     Your browser does not support the audio element.
   </audio>
-
   <script>
-    const canvas = document.getElementById("quantumCanvas");
+    const canvas = document.getElementById("blizzardCanvas");
     const ctx = canvas.getContext("2d");
-    const textContainer = document.getElementById("textContainer");
+    const backgroundMusic = document.getElementById("backgroundMusic");
+    const startModal = document.getElementById("startModal");
+    const startButton = document.getElementById("startButton");
+    const pauseButton = document.getElementById("pauseButton");
 
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    const colors = [
-      "rgba(50, 150, 255, 0.8)", // Electric blue
-      "rgba(200, 50, 150, 0.8)", // Dark pink
-      "rgba(100, 50, 200, 0.8)", // Purple
-    ];
-    const particleCount = 600; // Total number of particles
+    const colors = ["rgba(50, 150, 255, 0.8)", "rgba(200, 50, 150, 0.8)", "rgba(100, 50, 200, 0.8)"];
+    let particleCount = 600;
     const particles = [];
-    const cursor = { x: -100, y: -100 }; // Cursor starts off-screen
+    const cursor = { x: -100, y: -100 };
 
     class Particle {
       constructor() {
@@ -78,75 +198,98 @@
         this.y = Math.random() * canvas.height;
         this.size = Math.random() * 3 + 1;
         this.color = colors[Math.floor(Math.random() * colors.length)];
-        this.alpha = Math.random() * 0.8 + 0.2;
+        this.vx = (Math.random() - 0.5) * 5;
+        this.vy = (Math.random() - 0.5) * 5;
+      }
+
+      update() {
+        const dx = cursor.x - this.x;
+        const dy = cursor.y - this.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+
+        if (distance < 100) {
+          const force = (100 - distance) / 100;
+          this.vx += force * dx / distance;
+          this.vy += force * dy / distance;
+        }
+
+        this.x += this.vx;
+        this.y += this.vy;
+
+        if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {
+          this.reset();
+        }
       }
 
       draw() {
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fillStyle = this.color.replace("0.8", this.alpha.toFixed(2));
-        ctx.shadowBlur = 15;
-        ctx.shadowColor = this.color;
+        ctx.fillStyle = this.color;
         ctx.fill();
         ctx.closePath();
       }
     }
 
     function createParticles() {
-      particles.length = 0; // Clear existing particles
+      particles.length = 0;
       for (let i = 0; i < particleCount; i++) {
         particles.push(new Particle());
       }
     }
 
     function animate() {
-      ctx.fillStyle = "rgba(0, 0, 15, 1)"; // Steady dark blue background
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       particles.forEach((particle) => {
-        // Particle attraction toward cursor
-        const dx = cursor.x - particle.x;
-        const dy = cursor.y - particle.y;
-        const distance = Math.sqrt(dx * dx + dy * dy);
-
-        if (distance < 100) {
-          const force = (100 - distance) / 100;
-          particle.x += force * dx / distance;
-          particle.y += force * dy / distance;
-        }
-
+        particle.update();
         particle.draw();
-        particle.reset(); // Reset particles every frame for flutter effect
       });
-
-      // Draw potato cursor
-      ctx.beginPath();
-      ctx.arc(cursor.x, cursor.y, 20, 0, Math.PI * 2);
-      ctx.fillStyle = "yellow";
-      ctx.shadowBlur = 30;
-      ctx.shadowColor = "yellow";
-      ctx.fill();
-      ctx.closePath();
 
       requestAnimationFrame(animate);
     }
 
-    // Handle window resize
-    window.addEventListener("resize", () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+    startButton.addEventListener("click", () => {
+      startModal.style.display = "none";
+      backgroundMusic.play();
+      createParticles();
+      animate();
+    });
+
+    let isPlaying = true;
+    pauseButton.addEventListener("click", () => {
+      if (isPlaying) {
+        backgroundMusic.pause();
+        pauseButton.textContent = "Play";
+      } else {
+        backgroundMusic.play();
+        pauseButton.textContent = "Pause";
+      }
+      isPlaying = !isPlaying;
+    });
+
+    const addParticlesButton = document.getElementById("addParticles");
+    const removeParticlesButton = document.getElementById("removeParticles");
+
+    addParticlesButton.addEventListener("click", () => {
+      particleCount = Math.min(particleCount * 1.2, 40000);
       createParticles();
     });
 
-    // Track cursor movement
+    removeParticlesButton.addEventListener("click", () => {
+      particleCount = Math.max(particleCount * 0.8, 1);
+      createParticles();
+    });
+
     window.addEventListener("mousemove", (e) => {
       cursor.x = e.clientX;
       cursor.y = e.clientY;
     });
 
-    // Initialize particles and animation
-    createParticles();
-    animate();
+    window.addEventListener("resize", () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      createParticles();
+    });
   </script>
 </body>
 </html>
