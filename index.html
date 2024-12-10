@@ -41,18 +41,19 @@
     }
 
     #startModal button {
-      background: #00ffcc;
+      background: rgba(0, 0, 0, 0.5); /* Transparent black fill */
       border: none;
       padding: 10px 20px;
       font-family: 'Press Start 2P', monospace;
       font-size: 16px;
       cursor: pointer;
-      color: #000;
+      color: #fff;
       margin-top: 20px;
+      border-radius: 8px;
     }
 
     #startModal button:hover {
-      background: #00cc99;
+      background: rgba(0, 0, 0, 0.7);
     }
 
     .centered-text {
@@ -67,7 +68,7 @@
       pointer-events: auto;
       font-family: 'Press Start 2P', monospace;
       max-width: 90%;
-      white-space: nowrap;
+      white-space: nowrap; /* Prevent wrapping on larger screens */
     }
 
     a {
@@ -80,43 +81,33 @@
     }
 
     .adjust-button {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 50px;
+      width: 80px;
       height: 50px;
-      font-size: 24px;
+      margin: 10px;
+      font-size: 16px;
       font-family: 'Press Start 2P', monospace;
-      background: rgba(0, 0, 0, 0.5);
+      background: rgba(0, 0, 0, 0.5); /* Transparent black fill */
       color: #fff;
-      border: none;
-      border-radius: 50%;
+      border: 2px solid #00cc99;
+      border-radius: 12px;
       cursor: pointer;
       text-align: center;
       line-height: 50px;
-      z-index: 10;
+      animation: glitch 1.5s infinite;
     }
 
     .adjust-button:hover {
-      background: rgba(255, 255, 255, 0.2);
-    }
-
-    .adjust-button.left {
-      left: 10%;
-    }
-
-    .adjust-button.right {
-      right: 10%;
+      background: rgba(0, 0, 0, 0.7);
     }
 
     .pause-button {
       position: fixed;
       bottom: 20px;
       right: 20px;
-      background: rgba(0, 0, 0, 0.5);
+      background: rgba(0, 0, 0, 0.5); /* Transparent black fill */
       color: #fff;
       border: none;
-      border-radius: 10px;
+      border-radius: 12px;
       padding: 10px;
       font-family: 'Press Start 2P', monospace;
       cursor: pointer;
@@ -124,24 +115,37 @@
     }
 
     .pause-button:hover {
-      background: rgba(255, 255, 255, 0.2);
+      background: rgba(0, 0, 0, 0.7);
     }
 
     @keyframes glitch {
       0% {
         text-shadow: 2px 2px #ff00ff, -2px -2px #00ffff;
       }
-      25% {
-        text-shadow: -2px 2px #ff00ff, 2px -2px #00ffff;
-      }
       50% {
-        text-shadow: 2px -2px #ff00ff, -2px 2px #00ffff;
-      }
-      75% {
         text-shadow: -2px -2px #ff00ff, 2px 2px #00ffff;
       }
       100% {
         text-shadow: 2px 2px #ff00ff, -2px -2px #00ffff;
+      }
+    }
+
+    /* Mobile adjustments */
+    @media (max-width: 600px) {
+      .centered-text {
+        font-size: 14px;
+        max-width: 90%;
+        white-space: normal;
+      }
+
+      .adjust-button {
+        position: static;
+        width: 100px;
+        font-size: 14px;
+      }
+
+      .pause-button {
+        font-size: 14px;
       }
     }
   </style>
@@ -156,16 +160,18 @@
 
   <canvas id="blizzardCanvas"></canvas>
   <div class="centered-text" id="textContainer">
-    <p>POTATO PROPAGANDA IS THE BIRTH OF A MEME LEGEND</p>
+    <p>POTATO PROPAGANDA IS A TRUTH TERMINAL PROPHECY</p>
     <p>
       <a href="https://dexscreener.com/solana/2nkjfack2cq6hrnaw9fec6jmzrzk5lmvq9pis2vy9ppk">DexScreener</a>   
       <a href="https://raydium.io/swap/?inputMint=sol&outputMint=6ksVq6fcgaiAXCWYiE9zRS1NLTxeKMPcVSAzzByTpump">Raydium</a>
       <a href="https://t.me/potaprop">Telegram</a>   
       <a href="https://discord.gg/BWPVp5DT">Discord</a> 
     </p>
+    <div style="text-align: center;">
+      <button class="adjust-button" id="removeParticles">-</button>
+      <button class="adjust-button" id="addParticles">+</button>
+    </div>
   </div>
-  <button class="adjust-button left" id="removeParticles">-</button>
-  <button class="adjust-button right" id="addParticles">+</button>
   <button class="pause-button" id="pauseButton">Pause</button>
   <audio id="backgroundMusic" loop>
     <source src="https://steamnshine.squarespace.com/s/Potatoes.mp3" type="audio/mpeg">
@@ -270,7 +276,7 @@
     const removeParticlesButton = document.getElementById("removeParticles");
 
     addParticlesButton.addEventListener("click", () => {
-      particleCount = Math.min(particleCount * 1.2, 150000);
+      particleCount = Math.min(particleCount * 1.2, 10000);
       createParticles();
     });
 
