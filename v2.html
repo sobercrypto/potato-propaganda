@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Potato Propaganda</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: radial-gradient(circle at center, #00000F, #000005);
+      font-family: 'Press Start 2P', monospace;
+      color: #fff;
+    }
+
+    canvas {
+      display: block;
+    }
+
+    #startModal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-family: 'Press Start 2P', monospace;
+      z-index: 100;
+    }
+
+    #startModal p {
+      font-size: 24px;
+      text-align: center;
+      animation: glitch 2s infinite;
+    }
+
+    #startModal button {
+      background: #00ffcc; /* Lighter green */
+      border: none;
+      padding: 10px 20px;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 16px;
+      cursor: pointer;
+      color: #000;
+      margin-top: 20px;
+      border-radius: 8px;
+    }
+
+    #startModal button:hover {
+      background: #00cc99; /* Slightly darker green hover effect */
+    }
+
+    .centered-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      color: #fff;
+      font-size: 18px;
+      z-index: 5;
+      pointer-events: auto;
+      font-family: 'Press Start 2P', monospace;
+      max-width: 90%;
+      white-space: nowrap; /* Prevent wrapping on larger screens */
+    }
+
+    a {
+      color: #00ffcc;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .adjust-button {
+      width: 80px;
+      height: 50px;
+      margin: 10px;
+      font-size: 16px;
+      font-family: 'Press Start 2P', monospace;
+      background: rgba(0, 0, 0, 0.5); /* Transparent black fill */
+      color: #fff;
+      border: 2px solid #8000ff; /* Purple outline */
+      border-radius: 12px;
+      cursor: pointer;
+      text-align: center;
+      line-height: 50px;
+      animation: glitch 1.5s infinite;
+    }
+
+    .adjust-button:hover {
+      background: rgba(0, 0, 0, 0.7);
+    }
+
+    .pause-button {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: rgba(0, 0, 0, 0.5); /* Transparent black fill */
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 10px;
+      font-family: 'Press Start 2P', monospace;
+      cursor: pointer;
+      z-index: 10;
+    }
+
+    .pause-button:hover {
+      background: rgba(0, 0, 0, 0.7);
+    }
+
+    @keyframes glitch {
+      0% {
+        text-shadow: 2px 2px #ff00ff, -2px -2px #00ffff;
+      }
+      50% {
+        text-shadow: -2px -2px #ff00ff, 2px 2px #00ffff;
+      }
+      100% {
+        text-shadow: 2px 2px #ff00ff, -2px -2px #00ffff;
+      }
+    }
+
+    /* Mobile adjustments */
+    @media (max-width: 600px) {
+      .centered-text {
+        font-size: 14px;
+        max-width: 90%;
+        white-space: normal;
+      }
+
+      .adjust-button {
+        position: static;
+        width: 100px;
+        font-size: 14px;
+      }
+
+      .pause-button {
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="startModal">
+    <div>
+      <p>ACTIVATE THE POTATO PROPAGANDA PROPHECY</p>
+      <button id="startButton">Start</button>
+    </div>
+  </div>
+
+  <canvas id="blizzardCanvas"></canvas>
+  <div class="centered-text" id="textContainer">
+    <p>POTATO PROPAGANDA IS A TRUTH TERMINAL PROPHECY</p>
+    <p>
+      <a href="https://dexscreener.com/solana/2nkjfack2cq6hrnaw9fec6jmzrzk5lmvq9pis2vy9ppk">DexScreener</a>   
+      <a href="https://raydium.io/swap/?inputMint=sol&outputMint=6ksVq6fcgaiAXCWYiE9zRS1NLTxeKMPcVSAzzByTpump">Raydium</a>
+      <a href="https://t.me/potaprop">Telegram</a>   
+      <a href="https://discord.gg/BWPVp5DT">Discord</a> 
+    </p>
+    <div style="text-align: center;">
+      <button class="adjust-button" id="removeParticles">-</button>
+      <button class="adjust-button" id="addParticles">+</button>
+    </div>
+  </div>
+  <button class="pause-button" id="pauseButton">Pause</button>
+  <audio id="backgroundMusic" loop>
+    <source src="https://steamnshine.squarespace.com/s/Potatoes.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+  <script>
+    const canvas = document.getElementById("blizzardCanvas");
+    const ctx = canvas.getContext("2d");
+    const backgroundMusic = document.getElementById("backgroundMusic");
+    const startModal = document.getElementById("startModal");
+    const startButton = document.getElementById("startButton");
+    const pauseButton = document.getElementById("pauseButton");
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const colors = ["rgba(50, 150, 255, 0.8)", "rgba(200, 50, 150, 0.8)", "rgba(100, 50, 200, 0.8)"];
+    let particleCount = 600;
+    const particles = [];
+    const cursor = { x: -100, y: -100 };
+    let tiltX = 0, tiltY = 0;
+
+    class Particle {
+      constructor() {
+        this.reset();
+      }
+
+      reset() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 3 + 1;
+        this.color = colors[Math.floor(Math.random() * colors.length)];
+        this.vx = (Math.random() - 0.5) * 5;
+        this.vy = (Math.random() - 0.5) * 5;
+      }
+
+      update() {
+        const dx = cursor.x - this.x;
+        const dy = cursor.y - this.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+
+        // Cursor gravity effect
+        if (distance < 100) {
+          const force = (100 - distance) / 100;
+          this.vx += force * dx / distance;
+          this.vy += force * dy / distance;
+        }
+
+        // Apply tilt/gravity effect
+        this.vx += tiltX * 0.1;
+        this.vy += tiltY * 0.1;
+
+        this.x += this.vx;
+        this.y += this.vy;
+
+        if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {
+          this.reset();
+        }
+      }
+
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+        ctx.closePath();
+      }
+    }
+
+    function createParticles() {
+      particles.length = 0;
+      for (let i = 0; i < particleCount; i++) {
+        particles.push(new Particle());
+      }
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      particles.forEach((particle) => {
+        particle.update();
+        particle.draw();
+      });
+
+      requestAnimationFrame(animate);
+    }
+
+    // DeviceOrientation event listener for tilt gravity
+    window.addEventListener("deviceorientation", (event) => {
+      tiltX = event.gamma || 0; // Left-to-right tilt
+      tiltY = event.beta || 0;  // Front-to-back tilt
+    });
+
+    startButton.addEventListener("click", () => {
+      startModal.style.display = "none";
+      backgroundMusic.play();
+      createParticles();
+      animate();
+    });
+
+    let isPlaying = true;
+    pauseButton.addEventListener("click", () => {
+      if (isPlaying) {
+        backgroundMusic.pause();
+        pauseButton.textContent = "Play";
+      } else {
+        backgroundMusic.play();
+        pauseButton.textContent = "Pause";
+      }
+      isPlaying = !isPlaying;
+    });
+
+    const addParticlesButton = document.getElementById("addParticles");
+    const removeParticlesButton = document.getElementById("removeParticles");
+
+    addParticlesButton.addEventListener("click", () => {
+      particleCount = Math.min(particleCount * 1.2, 200000);
+      createParticles();
+    });
+
+    removeParticlesButton.addEventListener("click", () => {
+      particleCount = Math.max(particleCount * 0.8, 1);
+      createParticles();
+    });
+
+    window.addEventListener("mousemove", (e) => {
+      cursor.x = e.clientX;
+      cursor.y = e.clientY;
+    });
+
+    window.addEventListener("resize", () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      createParticles();
+    });
+  </script>
+</body>
+</html>
